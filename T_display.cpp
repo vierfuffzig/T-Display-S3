@@ -16,8 +16,8 @@ void Bat_level_Simon(int offset) {
 
   int batW = 10;
   int batL = 25;
-  int posX = TFT_HEIGHT - batW;//was -10
-  int posY = TFT_WIDTH - batL;
+  int posX = TFT_HEIGHT - batW - 10;//-10 to respect rounded dsp frame corners
+  int posY = TFT_WIDTH - batL - 10;
   int line = 2;
   int seg = 3;
   int segW = batW - 2 * line;
@@ -211,19 +211,20 @@ void Boot_Screen1(float lipo_voltage){
     sprite.fillScreen(TFT_BLACK);
     pinMode(TFT_BL, OUTPUT);      // TTGO T-Display enable Backlight pin 4
     digitalWrite(TFT_BL, HIGH);   // T-Display turn on Backlight
-    sprite.setCursor(0, 0);
+    sprite.setCursor(10, 10);
     sprite.setTextWrap(false);
     sprite.setTextColor(TFT_YELLOW);
     sprite.unloadFont();
     sprite.loadFont(Noto_Sans_Bold26);
     //sprite.setTextFont(4);
-    sprite.println("T-Display ESP-GPS");
+    sprite.println("T-Display-S3 ESP-GPS");
     int color= TFT_GREEN;
     if(lipo_voltage<MINIMUM_VOLTAGE+0.5)color=TFT_YELLOW;
     if(lipo_voltage<MINIMUM_VOLTAGE+0.3)color=TFT_RED;
+    sprite.setCursor(10, 35);
     sprite.setTextColor(color);
     sprite.printf("Bat: %.2f",lipo_voltage);
-    sprite.setCursor(0, 110);
+    sprite.setCursor(10, 110);
     sprite.print(SW_version);
     sprite.pushSprite(0,0);
     for (int pos=0;pos<240;pos++){

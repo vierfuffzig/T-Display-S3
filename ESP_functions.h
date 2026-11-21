@@ -2,7 +2,7 @@
 #define ESP_FUNCTIONS
 
 String IP_adress="0.0.0.0";
-const char SW_version[16]="Ver-T 5.93";//Hier staat de software versie !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+const char SW_version[16]="Ver S3 5.93b";//Hier staat de software versie !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const char E_paper_version[16]="T-Display 16MB";
 
 char Ublox_type[20]="Ublox unknown...";
@@ -92,7 +92,7 @@ RTC_DATA_ATTR int RTC_SLEEP_screen=0;
 RTC_DATA_ATTR int RTC_OFF_screen=0;
 RTC_DATA_ATTR int RTC_counter=0;
 //Simon
-RTC_DATA_ATTR float RTC_calibration_bat=1.75;//bij ontwaken uit deepsleep niet noodzakelijk config file lezen
+RTC_DATA_ATTR float RTC_calibration_bat=1.5;//1.75;//bij ontwaken uit deepsleep niet noodzakelijk config file lezen
 RTC_DATA_ATTR float RTC_voltage_bat=3.6;
 RTC_DATA_ATTR float RTC_old_voltage_bat=3.6;
 RTC_DATA_ATTR int RTC_bat_choice = 0;
@@ -133,8 +133,8 @@ GPS_time S3600(3600);
 Alfa_speed A250(50);
 Alfa_speed A500(50);
 Alfa_speed a500(50);//for  Alfa stats GPIO_12 screens, reset possible !!
-Button_push Short_push12 (12,50,15,1); //GPIO12 pull up, 100ms push time, 15s long_pulse, count 1, STAT screen 4&5
-Button_push Long_push12 (12,2000,10,4); //GPIO12 pull up, 2000ms push time, 10s long_pulse, count 4, reset STAT screen 4&5
+Button_push Short_push12 (11,50,15,1); //GPIO12 pull up, 100ms push time, 15s long_pulse, count 1, STAT screen 4&5
+Button_push Long_push12 (11,2000,10,4); //GPIO12 pull up, 2000ms push time, 10s long_pulse, count 4, reset STAT screen 4&5
 Button_push Short_push35 (WAKE_UP_GPIO,10,10,9);//was 39
 Button_push Short_push15 (WAKE_UP_GPIOyy,10,10,9);//reed switch on GPIO15
 Button_push Long_push39 (WAKE_UP_GPIO,1500,10,9);//was 39
@@ -219,13 +219,15 @@ void go_to_sleep(uint64_t sleep_time){
   Serial.println("Going to sleep now");
   Serial.flush();
   if(reset_boot==0) {delay(5000);}
-  pinMode(13, OUTPUT);
-  digitalWrite(13, HIGH);//flash in deepsleep, CS stays HIGH!!
-  digitalWrite(TFT_BL, LOW); 
+  //pinMode(13, OUTPUT);
+  //digitalWrite(13, HIGH);//flash in deepsleep, CS stays HIGH!!
+  //digitalWrite(TFT_BL, LOW); 
   tft.fillScreen(TFT_BLACK);
   //tft.writecommand(ST7789_DISPOFF);// Switch off the display
   tft.writecommand(ST7789_SLPIN);// Sleep the display driver
   delay(100);
+  rtc_gpio_isolate(GPIO_NUM_xx);
+  rtc_gpio_isolate(GPIO_NUM_yy);
  // esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_TIMER);//reduce sleep current
  //esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_OFF);
  //esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
@@ -235,13 +237,13 @@ void go_to_sleep(uint64_t sleep_time){
   esp_sleep_enable_ext0_wakeup(GPIO_NUM_xx,0);//for T-display, no need to wake up with timer !!!
   // 2. VOORBEREIDING VOOR DEEP SLEEP:
   // Forceer de RTC controller om de interne pull-up AAN te houden tijdens de slaap
-  rtc_gpio_init(GPIO_NUM_15);
-  rtc_gpio_set_direction(GPIO_NUM_15, RTC_GPIO_MODE_INPUT_ONLY);
-  rtc_gpio_pullup_en(GPIO_NUM_15);
-  rtc_gpio_pulldown_dis(GPIO_NUM_15);
+  //rtc_gpio_init(GPIO_NUM_15);
+  //rtc_gpio_set_direction(GPIO_NUM_15, RTC_GPIO_MODE_INPUT_ONLY);
+  //rtc_gpio_pullup_en(GPIO_NUM_15);
+  //rtc_gpio_pulldown_dis(GPIO_NUM_15);
 
   // 3. Stel EXT1 in met ALL_LOW op de bitmask van pin 15
-  esp_sleep_enable_ext1_wakeup(BUTTON_PIN_BITMASK, ESP_EXT1_WAKEUP_ALL_LOW);
+  //esp_sleep_enable_ext1_wakeup(BUTTON_PIN_BITMASK, ESP_EXT1_WAKEUP_ALL_LOW);
   //adc_power_off();
   esp_deep_sleep_start();  
 }
@@ -344,7 +346,7 @@ void GPSTC_info(char *GPSTC_post) {
   strcat(GPSTC_post, tekst);
 }
 void Update_bat(void){
-    analog_bat = analogRead(PIN_BAT);
+    analog_bat = analogRead(PIN_BAT)*2;
     analog_mean=analog_bat*FIR_BAT+analog_mean*(1-FIR_BAT);
     RTC_voltage_bat=analog_mean*RTC_calibration_bat/1000;
 }
@@ -359,14 +361,14 @@ void printLocalTime(){
 }  
 //For RTOS, the watchdog has to be triggered
 void feedTheDog_Task0(){
-  TIMERG0.wdt_wprotect=TIMG_WDT_WKEY_VALUE; // write enable TIMERG0.wdt_wprotect=TIMG_WDT_WKEY_VALUE;
-  TIMERG0.wdt_feed=1;                       // feed dog
-  TIMERG0.wdt_wprotect=0;                   // write protect
+  TIMERG0.wdtwprotect.wdt_wkey=1356348065; // write enable TIMERG0.wdt_wprotect=TIMG_WDT_WKEY_VALUE; change wdt syntax for S3
+  TIMERG0.wdtfeed.wdt_feed=1;                       // feed dog
+  TIMERG0.wdtwprotect.wdt_wkey=0;                   // write protect
 }
 void feedTheDog_Task1(){ 
-  TIMERG1.wdt_wprotect=TIMG_WDT_WKEY_VALUE; // write enable
-  TIMERG1.wdt_feed=1;                       // feed dog
-  TIMERG1.wdt_wprotect=0;                   // write protect
+  TIMERG1.wdtwprotect.wdt_wkey=1356348065; // write enable
+  TIMERG1.wdtfeed.wdt_feed=1;                       // feed dog
+  TIMERG1.wdtwprotect.wdt_wkey=0;                   // write protect
 } 
 
 void OnWiFiEvent(WiFiEvent_t event){

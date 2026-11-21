@@ -4,7 +4,7 @@
 //#define STATIC_DEBUG        //indien gps test zonder snelheid en met wifi actief
 //#define DLS                  //set date on march 26 1:55, to test daylightsaving
 //#define T5_E_PAPER           //for compiling without display functions....
-#define GPIO12_ACTIF        //if GPIO12 is used as wake up, standard GPIO12 function is not activated !!
+//#define GPIO12_ACTIF        //if GPIO12 is used as wake up, standard GPIO12 function is not activated !!
 
 #define TIME_DELAY_FIRST_FIX 10 //10 navpvt messages alvorens start loggen
 #define TIME_DELAY_NEW_RUN 10 //int time_delay_new_run
@@ -22,40 +22,40 @@
 #define AUTO_DETECT 0xFF
 /*Pin definitions**************************************************************************/
 // pinouts from https://github.com/Xinyuan-LilyGO/TTGO-T-Display
-#define TFT_MOSI 19
-#define TFT_SCLK 18
-#define TFT_CS 5
-#define TFT_DC 16
-#define TFT_RST 23
-#define TFT_BL 4
+#define TFT_MOSI 39
+#define TFT_SCLK 38
+#define TFT_CS 21
+#define TFT_DC 45
+#define TFT_RST 40
+#define TFT_BL 46
 
-#define SDCARD_SS 13  //13
-#define SDCARD_CLK 22//14
-#define SDCARD_MOSI 17  //15
-#define SDCARD_MISO 21  //2
-#define WAKE_UP_GPIO 35 //button on T-display, used as wakeup source
-#define WAKE_UP_GPIOyy 15 //for reed-switch
+#define SDCARD_SS 14  //13
+#define SDCARD_CLK 16//14
+#define SDCARD_MOSI 15  //15
+#define SDCARD_MISO 17  //2
+#define WAKE_UP_GPIO 11 //button on T-display, used as wakeup source
+#define WAKE_UP_GPIOyy 11 //for reed-switch
 // Bitmask voor GPIO 15 = 1 << 15 (of hexadecimaal 0x8000)
-#define BUTTON_PIN_BITMASK (1ULL << GPIO_NUM_15) 
-#define GPIO_NUM_xx GPIO_NUM_35   //buton on T-display, used as wakeup source
-#define GPIO_NUM_yy GPIO_NUM_15   //strapping pin, but can used as wakeup source !!
-#define RXD2 32 //yellow is Tx Ublox, Beitian white is Tx
-#define TXD2 33 //green is Rx Ublox, Beitian green is Rx
-#define ADC_EN  14  //ADC_EN is the ADC detection enable port
-#define PIN_BAT 34 //adc for bat voltage
+//#define BUTTON_PIN_BITMASK (1ULL << GPIO_NUM_11) 
+#define GPIO_NUM_xx GPIO_NUM_11   //buton on T-display, used as wakeup source
+#define GPIO_NUM_yy GPIO_NUM_11   //strapping pin, but can used as wakeup source !!
+#define RXD2 4 //yellow is Tx Ublox, Beitian white is Tx
+#define TXD2 5 //green is Rx Ublox, Beitian green is Rx
+//#define ADC_EN  10  //ADC_EN is the ADC detection enable port
+#define PIN_BAT 12 //adc for bat voltage
 #define FIR_BAT 0.02 //FIR filter factor for bat measurement
-#define UBLOX_POWER1 25
-#define UBLOX_RTC_GPIO1 GPIO_NUM_25
-#define UBLOX_POWER2 26
-#define UBLOX_RTC_GPIO2 GPIO_NUM_26
-#define UBLOX_POWER3 27
-#define UBLOX_GPIO3 GPIO_NUM_27
+#define UBLOX_POWER1 1
+#define UBLOX_RTC_GPIO1 GPIO_NUM_1
+#define UBLOX_POWER2 2
+#define UBLOX_RTC_GPIO2 GPIO_NUM_2
+#define UBLOX_POWER3 3
+#define UBLOX_GPIO3 GPIO_NUM_3
 /*Other definitions...**********************************************************************/
-#define CALIBRATION_BAT_V 1.7 //voor proto 1
+#define CALIBRATION_BAT_V 1.5//1.7 //voor proto 1
 #define VOLTAGE_100 4.15     //reading 100% bat, after end charging voltage drops to 4.15 V
 #define VOLTAGE_0 3.4       //reading 0% bat
 #define VOLTAGE_LOW 25      //reading 25% bat
-#define MINIMUM_VOLTAGE 3.1       // if lower then minimum_voltage, back to sleep.....
+#define MINIMUM_VOLTAGE 0//3.1       // if lower then minimum_voltage, back to sleep.....
 #define MINIMUM_VOLTAGE_CHANGE  0.01  //refresh screen if change > 0.01
 #define STARTVALUE_HIGHEST_READ 2300  //12 bit ADC, 4.2 V over voltagedivider
 #define MAXVALUE_HIGHEST_READ 2700

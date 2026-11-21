@@ -60,9 +60,9 @@ void setup() {
   Serial.println("setup Serial");
   Serial.println("Serial Txd is on pin: "+String(TX));
   Serial.println("Serial Rxd is on pin: "+String(RX));
- // print_reset_reason(rtc_get_reset_reason(0));//Find out the reset reason, if no SW-reset-> back to deep sleep !
- // print_wakeup_reason(); //Print the wakeup reason for ESP32, go back to sleep is timer is wake-up source !
-  analog_mean = analogRead(PIN_BAT);//fill FIR filter
+  //print_reset_reason(rtc_get_reset_reason(0));//Find out the reset reason, if no SW-reset-> back to deep sleep !
+  //print_wakeup_reason(); //Print the wakeup reason for ESP32, go back to sleep is timer is wake-up source !
+  analog_mean = analogRead(PIN_BAT) * 2;//fill FIR filter, T-Display-S3 adc on pin 12 has a 2:1 divider
   for(int i=0;i<(1/FIR_BAT);i++){Update_bat();}
   if(RTC_voltage_bat> (MINIMUM_VOLTAGE+0.2)){setCpuFrequencyMhz(40);}
   else {};
@@ -82,7 +82,7 @@ void setup() {
   /*
   esp_sleep_enable_ext0_wakeup(GPIO_NUM_xx,0);//for T-display, no need to wake up with timer !!!
   pinMode(WAKE_UP_GPIOyy, INPUT_PULLUP);
-  esp_sleep_enable_ext1_wakeup(BUTTON_PIN_BITMASK,ESP_EXT1_WAKEUP_ALL_LOW);
+  //esp_sleep_enable_ext1_wakeup(BUTTON_PIN_BITMASK,ESP_EXT1_WAKEUP_ALL_LOW);
   */
   sdSPI.begin(SDCARD_CLK, SDCARD_MISO, SDCARD_MOSI, SDCARD_SS);//default 20 MHz gezet worden !
 
@@ -91,14 +91,14 @@ void setup() {
   if (!SD.begin(SDCARD_SS, sdSPI)) {
         sdOK = false;
         Serial.println("No SDCard found!");
-        if (!LITTLEFS.begin(FORMAT_LITTLEFS_IF_FAILED)) {
+        if (!LittleFS.begin(FORMAT_LITTLEFS_IF_FAILED)) {
           Serial.println("LITTLEFS Mount Failed");
           return;
         } 
     else {
       Serial.print("LITTLEFS Mounted with success. Total space= ");
-      int total_Mbytes = LITTLEFS.totalBytes()/(1024*1024);
-      int used_Mbytes = LITTLEFS.usedBytes()/(1024*1024);
+      int total_Mbytes = LittleFS.totalBytes()/(1024*1024);
+      int used_Mbytes = LittleFS.usedBytes()/(1024*1024);
       freeSpace=total_Mbytes-used_Mbytes;
       Serial.print(total_Mbytes);
       Serial.println(" Mbytes");
