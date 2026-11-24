@@ -2,7 +2,7 @@
 #define ESP_FUNCTIONS
 
 String IP_adress="0.0.0.0";
-const char SW_version[16]="Ver. 5.93c";//Hier staat de software versie !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+const char SW_version[16]="Ver. 5.93c";
 const char E_paper_version[16]="T-Display-S3";
 
 char Ublox_type[20]="Ublox unknown...";
@@ -29,17 +29,15 @@ int GPS_OK = 0;
 int analog_bat;
 int first_fix_GPS,run_count,old_run_count,stat_count,GPS_delay;
 int start_logging_millis;
-int wifi_search=10;//was 10
+int wifi_search=10;
 int ftpStatus=0;
-//int time_out_nav_pvt=TIME_OUT_NAV_PVT;
 int last_gps_msg=0;
 int nav_pvt_message=0;
 int old_message=0;
 int nav_sat_message=0;
 int next_gpy_full_frame=0;
-//int nav_pvt_message_nr=0;
 int msgType;
-int GPIO12_screen=0;//keuze welk scherm
+int GPIO12_screen=0;
 int low_bat_count;
 int gps_speed;
 int S10_previous_run;
@@ -52,7 +50,8 @@ int freeSpace;
 extern TFT_eSPI tft;
 int cursor_y,cursor_x;
 String actual_ssid="_ssid_";
- /* variables to hold instances of tasks*/
+
+/* variables to hold instances of tasks*/
 TaskHandle_t t1 = NULL;
 TaskHandle_t t2 = NULL;
 byte mac[6];  //unique mac adress of esp32
@@ -92,15 +91,12 @@ RTC_DATA_ATTR int RTC_SLEEP_screen=0;
 RTC_DATA_ATTR int RTC_OFF_screen=0;
 RTC_DATA_ATTR int RTC_counter=0;
 //Simon
-RTC_DATA_ATTR float RTC_calibration_bat=1.3;//1.75;//bij ontwaken uit deepsleep niet noodzakelijk config file lezen
+RTC_DATA_ATTR float RTC_calibration_bat=1.3;
 RTC_DATA_ATTR float RTC_voltage_bat=3.6;
 RTC_DATA_ATTR float RTC_old_voltage_bat=3.6;
 RTC_DATA_ATTR int RTC_bat_choice = 0;
 RTC_DATA_ATTR int RTC_highest_read = STARTVALUE_HIGHEST_READ;
-/*Eenmaal flankdetectie indien GPIO langer dan push_time gedrukt
-* Ook variabele die dan long_pulse_time hoog blijft
-* Ook variabele die optelt tot maw elke keer push
-*/
+
 class Button_push{
             public:
             Button_push(int GPIO_pin,int push_time,int long_pulse_time,int max_count);//constructor
@@ -123,7 +119,6 @@ GPS_speed M100(100);
 GPS_speed M250(250);
 GPS_speed M500(500);
 GPS_speed M1852(1852);
-//GPS_time S1(1); //voor 1s snelheden
 GPS_time S2(2);
 GPS_time s2(2);
 GPS_time S10(10);
@@ -149,9 +144,7 @@ void Update_bat(void);
 void taskOne( void * parameter );
 void taskTwo( void * parameter);  
 
-  /*
-Method to print the reason by which ESP32 has been awaken from sleep
-*/
+//Method to print the reason by which ESP32 has been awaken from sleep
 void print_wakeup_reason(){
   analog_bat = analogRead(PIN_BAT);
   RTC_voltage_bat=analog_bat*RTC_calibration_bat*2/1000;
@@ -203,7 +196,7 @@ void print_reset_reason(int reason)
     case 15 : Serial.println ("RTCWDT_BROWN_OUT_RESET");break;//<15, Reset when the vdd voltage is not stable 
     case 16 : Serial.println ("RTCWDT_RTC_RESET");break;      //<16, RTC Watch dog reset digital core and rtc module
     */
-    case 12 : Serial.println ("SW_CPU_RESET");break;          /**<12, Software reset CPU*/        
+    case 12 : Serial.println ("SW_CPU_RESET");break; 
     default : Serial.println ("NO_MEAN, always back to sleep !!!");reset_boot=true; 
               pinMode(WAKE_UP_GPIO,INPUT_PULLUP); 
               pinMode(WAKE_UP_GPIOyy, INPUT_PULLUP);
@@ -286,7 +279,7 @@ void Shut_down(void){
               }
             delay(100);
             Close_files(); 
-            RTC_year=(tmstruct.tm_year+1900);//local time is corrected with timezone in close_files() !!
+            RTC_year=(tmstruct.tm_year+1900);
             RTC_month=(tmstruct.tm_mon+1);
             RTC_day=(tmstruct.tm_mday);
             RTC_hour=(tmstruct.tm_hour);
@@ -346,8 +339,7 @@ void GPSTC_info(char *GPSTC_post) {
   strcat(GPSTC_post, tekst);
 }
 void Update_bat(void){
-    analog_bat = analogRead(PIN_BAT); // 1:2 volt div on S3 ADC
-    //analog_mean=analog_bat*FIR_BAT+analog_mean*(1-FIR_BAT);
+    analog_bat = analogRead(PIN_BAT);
     analog_mean=(analog_bat*0.02+analog_bat*0.98);
     RTC_voltage_bat=analog_mean*RTC_calibration_bat*2/1000;// 1:2 volt div on S3 ADC
 }
@@ -383,7 +375,7 @@ void OnWiFiEvent(WiFiEvent_t event){
       Serial.println("ESP32 disconnected to WIFI");
       //SoftAP_connection=false;
       break;
-    case SYSTEM_EVENT_STA_GOT_IP://  @this event no IP !!!         SYSTEM_EVENT_STA_CONNECTED:
+    case SYSTEM_EVENT_STA_GOT_IP:
       Serial.println("ESP32 Connected to WiFi Network");
       IP_adress =  WiFi.localIP().toString();
       break;
@@ -411,10 +403,7 @@ void IRAM_ATTR isr() {
 	wifi_search=150;//to prevent action @ boot
 }
 */
-/*Eenmaal flankdetectie indien GPIO langer dan push_time gedrukt
-* Ook variabele die dan long_pulse_time hoog blijft
-* Ook variabele die optelt tot maw elke keer push
-*/
+
 Button_push::Button_push(int GPIO_pin, int push_time, int long_pulse_time, int max_count) {
   pinMode(GPIO_pin, INPUT_PULLUP);
   Input_pin = GPIO_pin;
@@ -431,7 +420,6 @@ boolean Button_push::Button_pushed(void) {
     if (button_count > max_button_count) button_count = 0;
     old_button_status = 1;
     millis_10s = millis();
-    //Serial.print ("Class button_count ");Serial.print(button_count);
     return_value = true;
   } else return_value = false;
   if ((millis() - millis_10s) < (1000 * max_pulse_time)) long_pulse = true;

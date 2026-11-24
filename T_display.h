@@ -84,8 +84,6 @@ Flip: horizontally
 #define WIFI_SOFT_AP 13
 #define TROUBLE 15
 #define GPS_INIT_SCREEN 16
-//#define TFT_WIDTH  135    = in User_setup.h
-//#define TFT_HEIGHT 240
 
 extern int sdTrouble,gps_speed,S10_previous_run;;
 extern int wifi_search;
@@ -141,7 +139,6 @@ extern TFT_eSprite sprite;
 extern TFT_eSprite sprite2;
 extern int cursor_x,cursor_y;
 const char* gpsChip(int longname);
-/* void Boot_Screen1(float lipo_voltage); */
 void Boot_Screen1(void);
 void Off_screen(int choice);
 void Update_screen(int screen);

@@ -20,8 +20,8 @@
 #define M9_115200BD 8
 #define M10_115200BD 9
 #define AUTO_DETECT 0xFF
+
 /*Pin definitions**************************************************************************/
-// pinouts from https://github.com/Xinyuan-LilyGO/TTGO-T-Display
 #define TFT_MOSI 39
 #define TFT_SCLK 38
 #define TFT_CS 21
@@ -29,20 +29,18 @@
 #define TFT_RST 40
 #define TFT_BL 46
 
-#define SDCARD_SS 14  //13
-#define SDCARD_CLK 16//14
-#define SDCARD_MOSI 15  //15
-#define SDCARD_MISO 17  //2
-#define WAKE_UP_GPIO 11 //button on T-display, used as wakeup source
-#define WAKE_UP_GPIOyy 11 //for reed-switch
-// Bitmask voor GPIO 15 = 1 << 15 (of hexadecimaal 0x8000)
-//#define BUTTON_PIN_BITMASK (1ULL << GPIO_NUM_11) 
-#define GPIO_NUM_xx GPIO_NUM_11   //buton on T-display, used as wakeup source
-#define GPIO_NUM_yy GPIO_NUM_11   //strapping pin, but can used as wakeup source !!
-#define RXD2 4 //yellow is Tx Ublox, Beitian white is Tx
-#define TXD2 5 //green is Rx Ublox, Beitian green is Rx
-//#define ADC_EN  10  //ADC_EN is the ADC detection enable port
-#define PIN_BAT 12 //adc for bat voltage
+#define SDCARD_SS 14
+#define SDCARD_CLK 16
+#define SDCARD_MOSI 15
+#define SDCARD_MISO 17
+#define WAKE_UP_GPIO 11
+#define WAKE_UP_GPIOyy 11
+
+#define GPIO_NUM_xx GPIO_NUM_11
+#define GPIO_NUM_yy GPIO_NUM_11
+#define RXD2 4
+#define TXD2 5
+#define PIN_BAT 12
 //#define FIR_BAT 0.02 //FIR filter factor for bat measurement
 #define UBLOX_POWER1 1
 #define UBLOX_RTC_GPIO1 GPIO_NUM_1
@@ -50,15 +48,16 @@
 #define UBLOX_RTC_GPIO2 GPIO_NUM_2
 #define UBLOX_POWER3 3
 #define UBLOX_GPIO3 GPIO_NUM_3
+
 /*Other definitions...**********************************************************************/
-#define CALIBRATION_BAT_V 1.3;// 1.5//1.7 //voor proto 1
+#define CALIBRATION_BAT_V 1.3;
 #define VOLTAGE_100 4.15     //reading 100% bat, after end charging voltage drops to 4.15 V
 #define VOLTAGE_0 3.4       //reading 0% bat
 #define VOLTAGE_LOW 25      //reading 25% bat
-#define MINIMUM_VOLTAGE 0//3.1       // if lower then minimum_voltage, back to sleep.....
+#define MINIMUM_VOLTAGE 0      // if lower then minimum_voltage, back to sleep.....
 #define MINIMUM_VOLTAGE_CHANGE  0.01  //refresh screen if change > 0.01
-#define STARTVALUE_HIGHEST_READ 1600 //2300  //12 bit ADC, 4.2 V over voltagedivider
-#define MAXVALUE_HIGHEST_READ 1900 //2700
+#define STARTVALUE_HIGHEST_READ 1600 //12 bit ADC, 4.2 V over voltagedivider
+#define MAXVALUE_HIGHEST_READ 1900
 #define FULLY_CHARGED_LIPO_VOLTAGE 4200.0 // to calculate calibration factor :  4200.0/ADC value bij highest reading while charging
 #define uS_TO_S_FACTOR 1000000UL /* Conversion factor for micro seconds to seconds */
 #define TIME_TO_SLEEP  86400UL   //1800UL        /* Time ESP32 will go to sleep (no for 24h, no need to refresh screen) */

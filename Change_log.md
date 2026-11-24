@@ -1,7 +1,10 @@
- #Changes SW 5.92
-*  Support for 115200 baud gps modules (Beitian Bx122)
-*  Added two digits after decimal point in some statscreens
-  ###Changes SW 5.91
+  ### Changes SW 5.93
+* changes for ESP32-S3 target
+* add gpy and sbp clock drift corrections from ESP-GPS main
+  ### Changes SW 5.92
+* Support for 115200 baud gps modules (Beitian Bx122)
+* Added two digits after decimal point in some statscreens
+  ### Changes SW 5.91
 * Bugfix due to memory overflow (sprite2)
   ###Changes SW 5.90
 * Added more stat screens
@@ -10,13 +13,12 @@
 * If sw-reset, normal boot
 * Adapt FIR filter bat reading 0.1 -> 0.02
 * Added GPSTC posting in webserver
-
-  ###Changes SW5.88
+  ### Changes SW5.88
 * Deep sleepcurrent 8mA -> 1mA, by switch off displaydriver in deepsleep  
-  ###Changes SW5.87
+  ### Changes SW5.87
 * LCD Backlight configurable, can be switched off @ stat-speed for current saving
 * Timezone bugs in gpy file correction 
-  ###Changes SW5.85
+  ### Changes SW5.85
 * changed value STARTVALUE_HIGHEST_READ 2500 -> 2300, otherwise out of limit in config ! 
 * Wifi searches fist for SSID1, then SSID2, if Wakeup is pushed -> AP-mode 
 * Wifi screen shows SSID when trying to connect 
@@ -24,7 +26,7 @@
 * Speed screen Simon font bug fixes
 * JSON buffer 1024 -> 1280
 * Watchdog actife @ Wifi search, changed from 60s->120s (AP mode 100s search)!
- ###Changes SW5.84
+  ### Changes SW5.84
 * stat6 screen bugfix "previous run", will be held until speed > 4m/s
 * Support for daylight saving in several timezones, configurable. 
 * Support for 2 SSID (can be used with smartphone hotspot)

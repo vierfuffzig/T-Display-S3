@@ -41,7 +41,6 @@ const char* ssid2 = config.ssid2; //WiFi SSID
 const char* password2 = config.password2; //WiFi Password
 const char* soft_ap_ssid = "ESP32AP"; //accespoint ssid
 const char* soft_ap_password = "password"; //accespoint password
-//const char* hostname = "ESP-GPS";
 extern char Timezone[64];
 bool ap_mode=false;
 bool Refresh_Screen = 1;
@@ -52,7 +51,6 @@ TFT_eSprite sprite = TFT_eSprite(&tft);
 TFT_eSprite sprite2 = TFT_eSprite(&tft);
 
 void setup() { 
-  //esp_deep_sleep_start(); 
   setCpuFrequencyMhz(10);
   Serial.begin(115200);
   Serial.print("Actual CPU freq @ boot= "); Serial.println (getCpuFrequencyMhz());
@@ -61,34 +59,19 @@ void setup() {
   Serial.println("setup Serial");
   Serial.println("Serial Txd is on pin: "+String(TX));
   Serial.println("Serial Rxd is on pin: "+String(RX));
-  //print_reset_reason(rtc_get_reset_reason(0));//Find out the reset reason, if no SW-reset-> back to deep sleep !
-  //print_wakeup_reason(); //Print the wakeup reason for ESP32, go back to sleep is timer is wake-up source !
-  analog_mean = analogRead(PIN_BAT);//fill FIR filter, T-Display-S3 adc on pin 12 has a 2:1 divider
-  //for(int i=0;i<(1/FIR_BAT);i++){Update_bat();}
+  analog_mean = analogRead(PIN_BAT);
   for(int i=0;i<50;i++){Update_bat();}
   if(RTC_voltage_bat> (MINIMUM_VOLTAGE+0.2)){setCpuFrequencyMhz(40);}
   else {};
   Serial.print("Actual CPU freq @ Boot_screen= "); Serial.println (getCpuFrequencyMhz());
- // pinMode(14,OUTPUT);
- // digitalWrite(14,LOW);
- // Boot_Screen1(RTC_voltage_bat); 
-   Boot_Screen1();
- // digitalWrite(TFT_BL, LOW); 
- // tft.writecommand(ST7789_SLPIN);// Sleep the display driver
+  Boot_Screen1();
   delay(100);
   Serial.println(F("TFT Initialized"));
- // esp_deep_sleep_start(); 
   Serial.println(RTC_calibration_bat);
   Serial.println("Configuring WDT...");
-  esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
-  esp_task_wdt_add(NULL); //add current thread to WDT watch
-  /*
-  esp_sleep_enable_ext0_wakeup(GPIO_NUM_xx,0);//for T-display, no need to wake up with timer !!!
-  pinMode(WAKE_UP_GPIOyy, INPUT_PULLUP);
-  //esp_sleep_enable_ext1_wakeup(BUTTON_PIN_BITMASK,ESP_EXT1_WAKEUP_ALL_LOW);
-  */
+  esp_task_wdt_init(WDT_TIMEOUT, true);
+  esp_task_wdt_add(NULL);
   sdSPI.begin(SDCARD_CLK, SDCARD_MISO, SDCARD_MOSI, SDCARD_SS);//default 20 MHz gezet worden !
-
   struct timeval tv = { .tv_sec =  0, .tv_usec = 0 };
   settimeofday(&tv, NULL);
   if (!SD.begin(SDCARD_SS, sdSPI)) {
@@ -109,7 +92,6 @@ void setup() {
       Serial.print(total_Mbytes-used_Mbytes);
       Serial.println(" Mbytes");
       LittleFS_OK = true;
-      //Boot_Screen1(RTC_voltage_bat);
       loadConfiguration(filename, filename_backup, config);  // load config file
       Serial.print(F("Print config file..."));
       if (sdOK|LittleFS_OK) printFile(filename); 
@@ -127,7 +109,6 @@ void setup() {
         Serial.printf("SD free space: %lluMB\n", totalMBytes-usedMBytes); 
         Serial.println(F("Loading configuration..."));// Should load default config 
         loadConfiguration(filename, filename_backup, config); // load config file
-        //Short_push35.button_count=config.field;//set speed_field choice, so counting from correct speed_field !!
         Serial.print(F("Print config file...")); 
         printFile(filename); 
   } 
@@ -170,8 +151,8 @@ void setup() {
       Serial.print("IP address: ");
       Serial.println(IP_adress);
       Wifi_on=true;
-      if(sdOK){ftpSrv.begin("esp32","esp32"); }   //username, password for ftp, ftp not implemented for spiffs!!
-      OTA_setup();  //start webserver for over the air update
+      if(sdOK){ftpSrv.begin("esp32","esp32"); }
+      OTA_setup();
       Update_screen(WIFI_ON);
       }
   else{
@@ -188,8 +169,7 @@ void setup() {
   wdt_task0=millis();     
   wdt_task1=millis();    
   delay(100);
-   //Create RTOS task, so logging and e-paper update are separated (update e-paper is blocking, 800 ms !!)
-  //xTaskCreate(
+   
   xTaskCreatePinnedToCore(  
                     taskOne,          /* Task function. */
                     "TaskOne",        /* String with name of task. */
@@ -199,7 +179,7 @@ void setup() {
                     &t1,
                     1);            /* Task handle. */
  
- // xTaskCreate(
+ 
   xTaskCreatePinnedToCore( 
                     taskTwo,          /* Task function. */
                     "TaskTwo",        /* String with name of task. */
@@ -250,7 +230,7 @@ void taskOne( void * parameter )
         config.field_actual=config.speed_screen[Short_push35.button_count];
         }
       }
-   Field_choice=Short_push35.long_pulse;//10s wachttijd voor menu field keuze....//bug sw 5.54 !!
+   Field_choice=Short_push35.long_pulse;
    
    if((WiFi.status() != WL_CONNECTED)&(Wifi_on==true)&(SoftAP_connection==false)){
         Serial.println("No Wifi connection !");
@@ -301,7 +281,6 @@ void taskOne( void * parameter )
         #endif
         }
    else {msgType = processGPS(); //only decoding if no Wifi connection
-          //while (Serial2.available()) { Serial.print(char(Serial2.read()));}
           if((millis()-last_gps_msg)>TIME_OUT_NAV_PVT){trouble_screen=true;}//check for time out nav-pvt msg
           else {trouble_screen=false;}
           }  
@@ -323,12 +302,11 @@ void taskOne( void * parameter )
                 start_logging_millis=millis();
                 Open_files();//only start logging if GPS signal is OK
                 }
-          }      //    Alleen speed>0 indien snelheid groter is dan 1m/s + sACC<1 + sat<5 + speed>35 m/s !!!
+          }
         }
         if ((sdOK|LittleFS_OK)&(Time_Set_OK==true)&(nav_pvt_message>10)&(nav_pvt_message!=old_message)){
                   old_message=nav_pvt_message;
-                  //last_gps_msg=millis();
-                  gps_speed=ubxMessage.navPvt.gSpeed; //hier alles naar mm/s !!
+                  gps_speed=ubxMessage.navPvt.gSpeed;
                   static int last_flush_time=0;
                   if((millis()-last_flush_time)>60000){
                       Flush_files();
@@ -337,7 +315,7 @@ void taskOne( void * parameter )
                   if((ubxMessage.navPvt.numSV<=MIN_numSV_GPS_SPEED_OK)|((ubxMessage.navPvt.sAcc/1000.0f)>MAX_Sacc_GPS_SPEED_OK)|(ubxMessage.navPvt.gSpeed/1000.0f>MAX_GPS_SPEED_OK)){
                       gps_speed=0;
                       } 
-                  Log_to_SD();//hier wordt ook geprint naar serial !!
+                  Log_to_SD();
                   Ublox.push_data(ubxMessage.navPvt.lat/10000000.0f,ubxMessage.navPvt.lon/10000000.0f,gps_speed);   
                   run_count=New_run_detection(ubxMessage.navPvt.heading/100000.0f,S2.avg_s); 
                   alfa_window=Alfa_indicator(M250,M100,ubxMessage.navPvt.heading/100000.0f);
@@ -409,7 +387,7 @@ void taskTwo( void * parameter)
         Shut_down();
     }
     else if(low_bat_count>10){
-        RTC_OFF_screen=1;//Simon screen with info text !!!
+        RTC_OFF_screen=1;  //Simon screen with info text
         char tekst[32] = "";
         sprintf(tekst, "Shutdown low bat  @ %f V\n",MINIMUM_VOLTAGE);
         logERR(tekst);
@@ -422,8 +400,6 @@ void taskTwo( void * parameter)
     if (Refresh_Screen) {
       Refresh_Screen = 0;
       if((!Wifi_on)&(!Time_Set_OK)) {Update_screen(GPS_INIT_SCREEN);counter=1;}
-      //else if(millis()%12000>8000) { Update_screen(config.stat_screen[stat_count]);}//(GPS_Signal_OK==false) wifi on
-      //else if (millis() % 12000 < 4000) {Update_screen(SPEED);}
       else if(GPS_Signal_OK==false) Update_screen(WIFI_ON);
       else if(Time_Set_OK==false) Update_screen(WIFI_ON);
       else if((gps_speed/1000.0f<config.stat_speed)&(Field_choice==false)){

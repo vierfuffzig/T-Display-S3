@@ -200,24 +200,22 @@ void Best_5_Alfas_A(String Message, Alfa_speed A) {
   }
   sprite.pushSprite(0,0);
 }
-//void Boot_Screen1(float lipo_voltage){
+
 void Boot_Screen1(void){
   if((!sdOK)&(!LittleFS_OK)){
-    tft.init();           // Initialize ST7789 240x135,  S3 = 320*170
-    tft.setRotation(1);  //screen rotation
+    tft.init();
+    tft.setRotation(1);
     tft.fillScreen(TFT_BLACK);
     sprite.createSprite(TFT_HEIGHT,TFT_WIDTH);
     sprite2.createSprite(50, 50);
-    //sprite2.setSwapBytes(1);
     sprite.fillScreen(TFT_BLACK);
-    pinMode(TFT_BL, OUTPUT);      // TTGO T-Display enable Backlight pin 4
-    digitalWrite(TFT_BL, HIGH);   // T-Display turn on Backlight
+    pinMode(TFT_BL, OUTPUT);
+    digitalWrite(TFT_BL, HIGH);
     sprite.setCursor(10, 10);
     sprite.setTextWrap(false);
     sprite.setTextColor(TFT_YELLOW);
     sprite.unloadFont();
     sprite.loadFont(Noto_Sans_Bold26);
-    //sprite.setTextFont(4);
     sprite.println("ESP-GPS booting...");
     int color= TFT_GREEN;
     if(RTC_voltage_bat<MINIMUM_VOLTAGE+0.5)color=TFT_YELLOW;
@@ -229,7 +227,7 @@ void Boot_Screen1(void){
     sprite.print(SW_version);
     sprite.pushSprite(0,0);
     for (int pos=0;pos<240;pos++){
-      sprite2.fillRect(0, 0, 50, 48, TFT_BLACK);  // drawRect
+      sprite2.fillRect(0, 0, 50, 48, TFT_BLACK);
       sprite2.drawBitmap(2, 0, ESP_GPS_logo, 48, 48, TFT_BLACK, TFT_RED);
       sprite2.pushSprite(pos,60);
       delay(5);
@@ -346,7 +344,6 @@ void Update_screen(int screen){
         if (ubxMessage.navPvt.numSV > 3) color_sat = TFT_YELLOW;
         sprite.print("Waiting for Sat>=5");
         sprite.drawBitmap(sat_sprite_position, 150, ESP_Sat_22, 22, 22, TFT_BLACK, color_sat);
-        // sprite.drawLine(sat_sprite_position,150,sat_sprite_position,150+22,TFT_BLACK);
         sat_sprite_position++;
         if (sat_sprite_position > 536) sat_sprite_position = 0;
         delay(10);

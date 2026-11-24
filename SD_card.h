@@ -1,6 +1,8 @@
-//JsonConfigFile.ino for reading config file !!!
-//Changed next file for compiling with Arduino IDE 2.02 (SD(esp32) to SD)
-//C:\Users\andre\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.6\libraries\SD\library.properties
+/*
+JsonConfigFile.ino for reading config file
+in ~user\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.6\libraries\SD\library.properties
+change "SD(esp32)" to "SD"
+*/
 
 #ifndef SD_CARD_H
 #define SD_CARD_H
@@ -24,7 +26,6 @@ extern bool GPS_logging;
 extern float Mean_heading,heading_SD;
 extern float RTC_calibration_bat;
 extern float calibration_speed;
-//extern int time_out_nav_pvt;
 extern int next_gpy_full_frame;
 extern byte mac[6];
 extern const char SW_version[16];

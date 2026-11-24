@@ -107,7 +107,6 @@ int FtpServer::handleFTP()
     return 0;
 
   if (ftpServer.hasClient()) {
-//  if (ftpServer.available()) {
 	  client.stop();
 	  client = ftpServer.available();
   }

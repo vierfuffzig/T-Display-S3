@@ -1,4 +1,9 @@
-// Setup for the ESP32 T-Display S3 with ST7789-type TFT (may require setting TFT_MAD_MX writecommand to 0x00 in ST7789_Defines.h if image is mirrored and toggle inversion in User Setup 206)
+/*
+Setup for the ESP32 T-Display-S3 with ST7789-type TFT
+may require setting TFT_MAD_MX writecommand to 0x00 in ST7789_Defines.h if image is mirrored
+toggle color inversion in UserSetup_206 if required
+no touch functions as for now
+*/
 
 // ST7789 using 8-bit Parallel
 
@@ -26,22 +31,24 @@
 #define TFT_CS 21
 //end added
 
-#define TFT_DC 45 //7
-#define TFT_RST 40 //5
+#define TFT_DC 45
+#define TFT_RST 40
 
 #define TFT_WR 8
 #define TFT_RD 9
 
-//#define TFT_D0 39
-//#define TFT_D1 40
-//#define TFT_D2 41
-//#define TFT_D3 42
-//#define TFT_D4 45
-//#define TFT_D5 46
-//#define TFT_D6 47
-//#define TFT_D7 48
+/*
+#define TFT_D0 39
+#define TFT_D1 40
+#define TFT_D2 41
+#define TFT_D3 42
+#define TFT_D4 45
+#define TFT_D5 46
+#define TFT_D6 47
+#define TFT_D7 48
+*/
 
-#define TFT_BL 46 //38
+#define TFT_BL 46
 #define TFT_BACKLIGHT_ON HIGH
 
 #define LOAD_GLCD
