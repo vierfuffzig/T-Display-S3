@@ -141,7 +141,8 @@ extern TFT_eSprite sprite;
 extern TFT_eSprite sprite2;
 extern int cursor_x,cursor_y;
 const char* gpsChip(int longname);
-void Boot_Screen1(float lipo_voltage);
+/* void Boot_Screen1(float lipo_voltage); */
+void Boot_Screen1(void);
 void Off_screen(int choice);
 void Update_screen(int screen);
 void Bat_level(int X_offset,int Y_offset);

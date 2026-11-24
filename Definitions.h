@@ -43,7 +43,7 @@
 #define TXD2 5 //green is Rx Ublox, Beitian green is Rx
 //#define ADC_EN  10  //ADC_EN is the ADC detection enable port
 #define PIN_BAT 12 //adc for bat voltage
-#define FIR_BAT 0.02 //FIR filter factor for bat measurement
+//#define FIR_BAT 0.02 //FIR filter factor for bat measurement
 #define UBLOX_POWER1 1
 #define UBLOX_RTC_GPIO1 GPIO_NUM_1
 #define UBLOX_POWER2 2
@@ -51,14 +51,14 @@
 #define UBLOX_POWER3 3
 #define UBLOX_GPIO3 GPIO_NUM_3
 /*Other definitions...**********************************************************************/
-#define CALIBRATION_BAT_V 1.5//1.7 //voor proto 1
+#define CALIBRATION_BAT_V 1.3;// 1.5//1.7 //voor proto 1
 #define VOLTAGE_100 4.15     //reading 100% bat, after end charging voltage drops to 4.15 V
 #define VOLTAGE_0 3.4       //reading 0% bat
 #define VOLTAGE_LOW 25      //reading 25% bat
 #define MINIMUM_VOLTAGE 0//3.1       // if lower then minimum_voltage, back to sleep.....
 #define MINIMUM_VOLTAGE_CHANGE  0.01  //refresh screen if change > 0.01
-#define STARTVALUE_HIGHEST_READ 2300  //12 bit ADC, 4.2 V over voltagedivider
-#define MAXVALUE_HIGHEST_READ 2700
+#define STARTVALUE_HIGHEST_READ 1600 //2300  //12 bit ADC, 4.2 V over voltagedivider
+#define MAXVALUE_HIGHEST_READ 1900 //2700
 #define FULLY_CHARGED_LIPO_VOLTAGE 4200.0 // to calculate calibration factor :  4200.0/ADC value bij highest reading while charging
 #define uS_TO_S_FACTOR 1000000UL /* Conversion factor for micro seconds to seconds */
 #define TIME_TO_SLEEP  86400UL   //1800UL        /* Time ESP32 will go to sleep (no for 24h, no need to refresh screen) */

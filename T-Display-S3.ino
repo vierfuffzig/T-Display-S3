@@ -50,6 +50,7 @@ extern int cursor_x,cursor_y;
 TFT_eSPI tft = TFT_eSPI();
 TFT_eSprite sprite = TFT_eSprite(&tft);
 TFT_eSprite sprite2 = TFT_eSprite(&tft);
+
 void setup() { 
   //esp_deep_sleep_start(); 
   setCpuFrequencyMhz(10);
@@ -62,14 +63,16 @@ void setup() {
   Serial.println("Serial Rxd is on pin: "+String(RX));
   //print_reset_reason(rtc_get_reset_reason(0));//Find out the reset reason, if no SW-reset-> back to deep sleep !
   //print_wakeup_reason(); //Print the wakeup reason for ESP32, go back to sleep is timer is wake-up source !
-  analog_mean = analogRead(PIN_BAT) * 2;//fill FIR filter, T-Display-S3 adc on pin 12 has a 2:1 divider
-  for(int i=0;i<(1/FIR_BAT);i++){Update_bat();}
+  analog_mean = analogRead(PIN_BAT);//fill FIR filter, T-Display-S3 adc on pin 12 has a 2:1 divider
+  //for(int i=0;i<(1/FIR_BAT);i++){Update_bat();}
+  for(int i=0;i<50;i++){Update_bat();}
   if(RTC_voltage_bat> (MINIMUM_VOLTAGE+0.2)){setCpuFrequencyMhz(40);}
   else {};
   Serial.print("Actual CPU freq @ Boot_screen= "); Serial.println (getCpuFrequencyMhz());
  // pinMode(14,OUTPUT);
  // digitalWrite(14,LOW);
-  Boot_Screen1(RTC_voltage_bat); 
+ // Boot_Screen1(RTC_voltage_bat); 
+   Boot_Screen1();
  // digitalWrite(TFT_BL, LOW); 
  // tft.writecommand(ST7789_SLPIN);// Sleep the display driver
   delay(100);

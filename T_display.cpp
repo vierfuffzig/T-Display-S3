@@ -200,7 +200,8 @@ void Best_5_Alfas_A(String Message, Alfa_speed A) {
   }
   sprite.pushSprite(0,0);
 }
-void Boot_Screen1(float lipo_voltage){
+//void Boot_Screen1(float lipo_voltage){
+void Boot_Screen1(void){
   if((!sdOK)&(!LittleFS_OK)){
     tft.init();           // Initialize ST7789 240x135,  S3 = 320*170
     tft.setRotation(1);  //screen rotation
@@ -217,13 +218,13 @@ void Boot_Screen1(float lipo_voltage){
     sprite.unloadFont();
     sprite.loadFont(Noto_Sans_Bold26);
     //sprite.setTextFont(4);
-    sprite.println("T-Display-S3 ESP-GPS");
+    sprite.println("ESP-GPS booting...");
     int color= TFT_GREEN;
-    if(lipo_voltage<MINIMUM_VOLTAGE+0.5)color=TFT_YELLOW;
-    if(lipo_voltage<MINIMUM_VOLTAGE+0.3)color=TFT_RED;
+    if(RTC_voltage_bat<MINIMUM_VOLTAGE+0.5)color=TFT_YELLOW;
+    if(RTC_voltage_bat<MINIMUM_VOLTAGE+0.3)color=TFT_RED;
     sprite.setCursor(10, 35);
     sprite.setTextColor(color);
-    sprite.printf("Bat: %.2f",lipo_voltage);
+    sprite.printf("Bat: %.2f",RTC_voltage_bat);
     sprite.setCursor(10, 110);
     sprite.print(SW_version);
     sprite.pushSprite(0,0);
@@ -240,7 +241,7 @@ void Boot_Screen1(float lipo_voltage){
       sprite.setCursor(0,0);
       sprite.setTextColor(TFT_YELLOW);
       sprite.fillScreen(TFT_BLACK);
-      sprite.println("T-Display ESP-GPS");
+      sprite.println("ESP-GPS ready");
       sprite.setTextColor(TFT_GREEN);
       if(LittleFS_OK) sprite.print("Flash free:");
       if(sdOK) sprite.print("SD free:");

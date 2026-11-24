@@ -2,8 +2,8 @@
 #define ESP_FUNCTIONS
 
 String IP_adress="0.0.0.0";
-const char SW_version[16]="Ver S3 5.93b";//Hier staat de software versie !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-const char E_paper_version[16]="T-Display 16MB";
+const char SW_version[16]="Ver. 5.93c";//Hier staat de software versie !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+const char E_paper_version[16]="T-Display-S3";
 
 char Ublox_type[20]="Ublox unknown...";
 char TimeZone[64] ="GMT0";
@@ -44,7 +44,7 @@ int low_bat_count;
 int gps_speed;
 int S10_previous_run;
 float alfa_window;
-float analog_mean=2000;
+float analog_mean=1600;
 float Mean_heading,heading_SD;
 int wdt_task0,wdt_task1;
 int max_count_wdt_task0;
@@ -92,7 +92,7 @@ RTC_DATA_ATTR int RTC_SLEEP_screen=0;
 RTC_DATA_ATTR int RTC_OFF_screen=0;
 RTC_DATA_ATTR int RTC_counter=0;
 //Simon
-RTC_DATA_ATTR float RTC_calibration_bat=1.5;//1.75;//bij ontwaken uit deepsleep niet noodzakelijk config file lezen
+RTC_DATA_ATTR float RTC_calibration_bat=1.3;//1.75;//bij ontwaken uit deepsleep niet noodzakelijk config file lezen
 RTC_DATA_ATTR float RTC_voltage_bat=3.6;
 RTC_DATA_ATTR float RTC_old_voltage_bat=3.6;
 RTC_DATA_ATTR int RTC_bat_choice = 0;
@@ -154,7 +154,7 @@ Method to print the reason by which ESP32 has been awaken from sleep
 */
 void print_wakeup_reason(){
   analog_bat = analogRead(PIN_BAT);
-  RTC_voltage_bat=analog_bat*RTC_calibration_bat/1000;
+  RTC_voltage_bat=analog_bat*RTC_calibration_bat*2/1000;
   Serial.print("Battery voltage = ");
   Serial.println(RTC_voltage_bat);
   esp_sleep_wakeup_cause_t wakeup_reason;
@@ -346,9 +346,10 @@ void GPSTC_info(char *GPSTC_post) {
   strcat(GPSTC_post, tekst);
 }
 void Update_bat(void){
-    analog_bat = analogRead(PIN_BAT)*2;
-    analog_mean=analog_bat*FIR_BAT+analog_mean*(1-FIR_BAT);
-    RTC_voltage_bat=analog_mean*RTC_calibration_bat/1000;
+    analog_bat = analogRead(PIN_BAT); // 1:2 volt div on S3 ADC
+    //analog_mean=analog_bat*FIR_BAT+analog_mean*(1-FIR_BAT);
+    analog_mean=(analog_bat*0.02+analog_bat*0.98);
+    RTC_voltage_bat=analog_mean*RTC_calibration_bat*2/1000;// 1:2 volt div on S3 ADC
 }
 void printLocalTime(){
   struct tm timeinfo;
