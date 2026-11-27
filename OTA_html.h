@@ -341,33 +341,34 @@ void Drop_down_menu(float config_item,float value,String drop_text,String& webpa
 void html_config(String& webpage){
   //ssid
   String ssid="\"" + String(config.ssid) + "\"";//problem with white space in SSID depends on position in webpage ???
-  webpage += "<tr>\n<td>ssid</td><td>\n";
+  webpage += "<tr>\n<td>1st WiFi SSID</td><td>\n";
   webpage += "<input size='21' type='text' required name='ssid' value="+ssid+">\n";//input size 20->30 if SSID name exceeds input size, full name is not visible
-  webpage += "</select>\n</td><td>ssid: the name of the wlan where the esp-logger should connect to</td>\n</tr>\n";  
+  webpage += "</select>\n</td><td>Name of the primary WiFi-network to connect to</td>\n</tr>\n";  
    //password
-  webpage += "<tr>\n<td>password</td><td>\n";
+  webpage += "<tr>\n<td>1st WiFi password</td><td>\n";
   webpage += "<input size='20' type='text' required name='password' value="+String(config.password)+">\n";
-  webpage += "</select>\n</td><td>password: the password of the wlan where the esp-logger should connect to</td>\n</tr>\n"; 
+  webpage += "</select>\n</td><td>Password of the primary WiFi-network</td>\n</tr>\n"; 
   //ssid2
   String ssid2="\"" + String(config.ssid2) + "\"";//problem with white space in SSID depends on position in webpage ???
-  webpage += "<tr>\n<td>ssid2</td><td>\n";
+  webpage += "<tr>\n<td>2nd WiFi SSID</td><td>\n";
   webpage += "<input size='21' type='text' required name='ssid2' value="+ssid2+">\n";//input size 20->30 if SSID name exceeds input size, full name is not visible
-  webpage += "</select>\n</td><td>ssid2: wlan2, usefull for connection to your smartphone hotspot !</td>\n</tr>\n";  
+  webpage += "</select>\n</td><td>Name of an optional secondary WiFi-network to look for, smartphone or club hotspot</td>\n</tr>\n";  
    //password2
-  webpage += "<tr>\n<td>password2</td><td>\n";
+  webpage += "<tr>\n<td>2nd WiFi password</td><td>\n";
   webpage += "<input size='20' type='text' required name='password2' value="+String(config.password2)+">\n";
-  webpage += "</select>\n</td><td>password2: the password of the wlan2 where the esp-logger should connect to</td>\n</tr>\n"; 
+  webpage += "</select>\n</td><td>Password of the secondary WiFi-network</td>\n</tr>\n"; 
   //cal_bat
-  webpage += "<tr>\n<td>cal_bat</td><td>\n";
+  webpage += "<tr>\n<td>Battery calbration</td><td>\n";
   webpage += "<input size='4' type='number' required name='cal_bat' min='1' max='3' value="+String(RTC_calibration_bat)+" step='0.01'>\n";
-  webpage += "</select>\n</td><td>cal_bat: is the calibration <br> of the battery voltage measurement (1.6-1.89).</td>\n</tr>\n"; 
+  webpage += "</select>\n</td><td>Calibration multiplier to optimize battery voltage management accuracy</td>\n</tr>\n"; 
   //cal_speed 
-  webpage += "<tr><td>cal_speed</td><td>\n<select id='cal_speed' name='cal_speed' type='number'>\n";
-  if(config.cal_speed == 3.6) webpage += "<option value='3.60' selected>3.6 km/h</option>\n"; else webpage += "<option value=3.60>3.6 km/h</option>\n";
-  if(config.cal_speed <2) webpage += "<option value='1.9438' selected>1.9438 knots</option>\n"; else webpage += "<option value=1.9438>1.9438 knots</option>\n";
-  webpage += "</select>\n</td><td>cal_speed: is for the conversion from gps unit m/s to km/h (3.6)or knots (1.9438).</td>\n</tr>\n";
+  webpage += "<tr><td>Speed unit</td><td>\n<select id='cal_speed' name='cal_speed' type='number'>\n";
+  if(config.cal_speed == 3.6) webpage += "<option value='3.60' selected>km/h</option>\n"; else webpage += "<option value=3.60>km/h</option>\n";
+  if(config.cal_speed <2) webpage += "<option value='1.9438' selected>knots</option>\n"; else webpage += "<option value=1.9438>knots</option>\n";
+  webpage += "</select>\n</td><td>Choose your preferred speed unit, km/h or knots</td>\n</tr>\n";
+  //webpage += "</select>\n</td><td>cal_speed: is for the conversion from gps unit m/s to km/h (3.6)or knots (1.9438).</td>\n</tr>\n";
   //Auto detect gps bd rate and type
-  webpage += "<tr>\n<td>GPS_Type</td><td>\n<select id='GPS_Type' name='GPS_Type'>";
+  webpage += "<tr>\n<td>GPS Type</td><td>\n<select id='GPS_Type' name='GPS_Type'>";
   Drop_down_menu(config.ublox_type,255,"AUTO_DETECT @ Boot",webpage);
   Drop_down_menu(config.ublox_type,M8_9600BD,"M8@9600BD",webpage);
   Drop_down_menu(config.ublox_type,M8_38400BD,"M8@38400BD",webpage);
@@ -378,9 +379,9 @@ void html_config(String& webpage){
   Drop_down_menu(config.ublox_type,M10_9600BD,"M10@9600BD",webpage);
   Drop_down_menu(config.ublox_type,M10_38400BD,"M10@38400BD",webpage);
   Drop_down_menu(config.ublox_type,M10_115200BD,"M10@115200BD",webpage);
-  webpage += "</select>\n</td><td>GPS type : If auto detect ON, the type of GPS will be identified when booting. </td>\n</tr>\n";
+  webpage += "</select>\n</td><td>Choose GPS chipset-type and baudrate or set to auto detect</td>\n</tr>\n";
   //sample_rate
-  webpage += "<tr>\n<td>sample_rate(Hz)</td><td>\n<select id='sample_rate' name='sample_rate'>";
+  webpage += "<tr>\n<td>Log rate</td><td>\n<select id='sample_rate' name='sample_rate'>";
   Drop_down_menu(config.sample_rate,1,"1 Hz",webpage);
   Drop_down_menu(config.sample_rate,2,"2 Hz",webpage);
   Drop_down_menu(config.sample_rate,4,"4 Hz",webpage);
@@ -391,46 +392,46 @@ void html_config(String& webpage){
     Drop_down_menu(config.sample_rate,15,"15 Hz",webpage);
     Drop_down_menu(config.sample_rate,20,"20 Hz",webpage);
     }
-  webpage += "</select>\n</td><td>sample_rate: can be 1,2,4,5,8,10 (M8,M9,M10) 15Hz,20Hz (only M8 high performance mode or M9!). The higher, the more accurate, but also the larger the files become!<br> One UBX NavPVT message is 100byte, so at 1Hz this gives a file of 360kb/hour, at 10Hz 3.6Mb/hour!<br>For the M10, max. sample-rate depends on GNSS settings ! 4 GNSS : max  4 Hz, 3 GNSS : max 5 Hz, 2 GNSS : max 10 Hz !</td>\n</tr>\n";
+  webpage += "</select>\n</td><td>Choose 5Hz for good accuracy / filesize ratio. <br> Choose up to 10Hz in standard mode and up to 20Hz for M8 / M9 in performance mode. Higher rates produce larger the files at higher CPU load. <br> One UBX NavPVT message is 100byte, log file size at 1Hz = 360kb/hour, at 10Hz = 3.6Mb/hour!<br>The M10's maximum sample-rates depend on GNSS settings: 4 GNSS : max  4 Hz, 3 GNSS : max 5 Hz, 2 GNSS : max 10 Hz !</td>\n</tr>\n";
   //cpu_freq
-  webpage += "<tr>\n<td>CPU freq(MHz)</td><td>\n<select id='CPU_freq' name='CPU_freq'>";
+  webpage += "<tr>\n<td>CPU frequency</td><td>\n<select id='CPU_freq' name='CPU_freq'>";
   Drop_down_menu(config.cpu_freq,40,"40 MHz",webpage);
   Drop_down_menu(config.cpu_freq,80,"80 MHz",webpage);
   Drop_down_menu(config.cpu_freq,160,"160 MHz",webpage);
   Drop_down_menu(config.cpu_freq,240,"240 MHz",webpage);
-  webpage += "</select>\n</td><td>CPU freq: can be 40 MHz (2 Hz), 80 MHz (5 Hz),160 MHz(10hz) or 240 MHz(20Hz). Longest battery live @ 40 Mhz ! 20 Hz (M9) needs possible 160 MHz. </td>\n</tr>\n";
+  webpage += "</select>\n</td><td>Choose 80MHz for optimal performance / battery-life ratio. CPU clock settings may limit possible log rates.<br> Maximum log rate at 40MHz CPU = 2 Hz, at 80MHz CPU = 5Hz, at 160MHz CPU = 10hz and at 240MHz CPU = 20Hz.</td>\n</tr>\n";
   //gnss
-  webpage += "<tr><td>gnss</td><td>\n<select id='gnss' name='gnss'>\n";
+  webpage += "<tr><td>GPS systems</td><td>\n<select id='gnss' name='gnss'>\n";
   if((config.ublox_type == M8_9600BD)|(config.ublox_type == M8_38400BD)|(config.ublox_type == M8_115200BD)){
       Drop_down_menu(config.gnss,0,"GPS + BEIDOU",webpage);
       }
   else{ 
       Drop_down_menu(config.gnss,1,"GPS + GALILEO",webpage);     
       }
-  Drop_down_menu(config.gnss,2,"GPS + GLONAS",webpage);
-  Drop_down_menu(config.gnss,3,"GPS + GLONAS + GALILEO",webpage);
-  Drop_down_menu(config.gnss,4,"GPS + GALILEO + BEIDOU_B1C",webpage);      
+  Drop_down_menu(config.gnss,2,"GPS + GLONASS",webpage);
+  Drop_down_menu(config.gnss,3,"GPS + GLONASS + GALILEO",webpage);
+  Drop_down_menu(config.gnss,4,"GPS + GALILEO + BEIDOU",webpage);      
   if((config.ublox_type == M9_9600BD)|(config.ublox_type == M9_38400BD)|(config.ublox_type == M9_115200BD)|(config.ublox_type == M10_9600BD)|(config.ublox_type == M10_115200BD)){
-    Drop_down_menu(config.gnss,5,"GPS + GLONAS + GALILEO + BEIDOU",webpage);
+    Drop_down_menu(config.gnss,5,"GPS + GLONASS + GALILEO + BEIDOU",webpage);
     }   
-  webpage += "</select>\n</td><td>gnss choice, for the M10, 3 or 4 gnss simultanous limits the sample rate ! :<br> M8 (ROM version 2.01) : max 2 GNSS (GPS + GLONAS)<br> M8 (ROM version 3.01) : max 3 GNSS (GPS + GLONAS + GALILEO)<br> M9 : max 4 GNSS (GPS + GLONAS + GALILEO + BEIDOU)<br> M10: max 4 GNSS  (GPS + GLONAS + GALILEO + BEIDOU), but depends on sample-rate !</td>\n</tr>\n";
+  webpage += "</select>\n</td><td>For M10 choose 3 systems for a good accuracy / log rate ratio. Optimal system choice may vary with geographical region. <br> For western europe choose GPS, Galileo and Beidou. <br> M8 (ROM version 2.01) : max 2 GNSS (GPS + GLONASS)<br> M8 (ROM version 3.01) : max 3 GNSS (GPS + GLONASS + GALILEO)<br> M9 : max 4 GNSS (GPS + GLONASS + GALILEO + BEIDOU)<br> M10: max 4 GNSS  (GPS + GLONASS + GALILEO + BEIDOU). <br> Choosing 3 or more systems may limit log rate!</td>\n</tr>\n";
   //logUBX nav-sat message@rate/10
-  webpage += "<tr><td>logUBX_nav_sat</td><td>\n<select id='logUBX_nav_sat' name='logUBX_nav_sat'>\n";
-  Drop_down_menu(config.logUBX_nav_sat,1,"LOG UBX NAV SAT ON",webpage);
-  Drop_down_menu(config.logUBX_nav_sat,0,"LOG UBX NAV SAT OFF",webpage);
-  webpage += "</select>\n</td><td>logUBX_nav_sat: To save the GPS NAV SAT data in ubx format. For every 10 nav_pvt messages, 1 nav_sat message is saved. This can be used to evaluate the signal quality of your gps (ucenter). Only active if logUBX is ON and rate<10 Hz !!.</td>\n</tr>\n";  
+  webpage += "<tr><td>Log nav_sat</td><td>\n<select id='logUBX_nav_sat' name='logUBX_nav_sat'>\n";
+  Drop_down_menu(config.logUBX_nav_sat,1,"ON",webpage);
+  Drop_down_menu(config.logUBX_nav_sat,0,"OFF",webpage);
+  webpage += "</select>\n</td><td>Choose ON to save nav_sat messages in ubx format for optional GPS signal quality evaluation (u-center). Saves 1 nav_sat message for every 10 nav_pvt messages. <br> Requires to set logUBX to ON and log rate < 10 Hz !</td>\n</tr>\n";  
    //Archive_days
-  webpage += "<tr>\n<td>archive_days</td><td>\n";
+  webpage += "<tr>\n<td>Archive days</td><td>\n";
   webpage += "<input size='8' type='number' required name='archive_days' min='0' max='1000' value="+String(config.archive_days)+" step='1'>\n";
-  webpage += "</select>\n</td><td>If the files on the sd are older then archive_days, they can be moved to the Archive directory with \"Archive Files\"</td>\n</tr>\n";
+  webpage += "</select>\n</td><td>Moves log files older than that into the archive directory to keep the frontpage clean. </td>\n</tr>\n";
   //speed_screen
-  webpage += "<tr>\n<td>speed_screen</td><td>\n";
+  webpage += "<tr>\n<td>Speed screen</td><td>\n";
   webpage += "<input size='9' type='text' required name='speed_screen' value="+String(config.speed_screen)+">\n";//input size 9
-  webpage += "</select>\n</td><td>Speed_screens choice :  1=Auto switching between Run, Alfa & NM, 2=Run & NM, 3=Alfa, 4=NM, 5= Total distance, 6= 2s/10s, 7= Auto switching between Alfa & 500m, 8= Auto switching between Alfa & 1h, 9= Alfa, 1h, and good run. If more then 1 digit, toggle between separat digits : 841 toggle between 1,4 and 8 !</td>\n</tr>\n";  
+  webpage += "</select>\n</td><td>Allows to choose what data to show while going faster than stat_speed. Uses two optional top-row items and one big bold number for the main item. <br> 1 = 2s max, 5x10 avg and actual speed, 2 = max alpha, best hour and total distance, 3 = Alfa, 4 = mile, 5 = total distance, 6 = 2s and 10s max, 7 = switching between alfa and 500m, 8 = switching between alfa and 1h, 9 = alfa, 1h, and best 10s run. <br> Choose more than 1 digit to toggle respective screens !</td>\n</tr>\n";  
   //speed_field
-  webpage += "<tr>\n<td>speed_field</td><td>\n";
+  webpage += "<tr>\n<td>Show speed screen</td><td>\n";
   webpage += "<input size='8' type='number' required name='speed_field' min='0' max='99999' value="+String(config.field)+" step='1'>\n";
-  webpage += "</select>\n</td><td>speed_field: If this value is set to 0, LCD Backlight is switched off when stat-speed is exceeded (battery savings)!</td>\n</tr>\n";
+  webpage += "</select>\n</td><td>Setting to 0 switches off the screen while going faster than stat_speed. Improves battery life !</td>\n</tr>\n";
   //speed_large_font
   #ifndef TTGO_T_DISPLAY
   webpage += "<tr><td>speed_large_font</td><td>\n<select id='speed_large_font' name='speed_large_font'>\n";
@@ -445,21 +446,21 @@ void html_config(String& webpage){
   webpage += "</select>\n</td><td>bar_length: Default length = 1852 m for 100% bar (=Nautical mile)</td>\n</tr>\n";
   #endif
   //stat_screen
-  webpage += "<tr>\n<td>stat_screen</td><td>\n";
+  webpage += "<tr>\n<td>Statistics screen</td><td>\n";
   webpage += "<input size='9' type='text' required name='stat_screen' value="+String(config.stat_screen)+">\n";//input size 9
-  webpage += "</select>\n</td><td>Stat_screens choice : every character shows the according stat_screen after each other</td>\n</tr>\n";  
+  webpage += "</select>\n</td><td>Choose statistic screens. Choose more than one to toggle between screens. <br>1 = first row: 2s max, 5x10 avg, 100m, 250m, 500m and second row: alfa, mile, half hour, hour, distance<br>2 = distance, mile, hour, alfa<br>3 = 100m, 250m, 500m, 2s<br>4 = 100m, 250m, 500m, alfa<br>5 = best 10s runs<br>6 = best 250m runs<br>7 = best 500m runs<br>8 = best alfas</td>\n</tr>\n";  
   //Stat_screens_time
-  webpage += "<tr>\n<td>Stat_screens_time</td><td>\n";
+  webpage += "<tr>\n<td>Stat screens toogle time</td><td>\n";
   webpage += "<input size='8' type='number' required name='Stat_screens_time' min='2' max='10' value="+String(config.Stat_screens_time)+" step='1'>\n";
-  webpage += "</select>\n</td><td>The time between toggle the different stat screens</td>\n</tr>\n";
+  webpage += "</select>\n</td><td>Sets the duration in seconds to show each stat screen before toggling. </td>\n</tr>\n";
   //Stat_speed
-  webpage += "<tr>\n<td>stat_speed</td><td>\n";
+  webpage += "<tr>\n<td>Speed screen speed</td><td>\n";
   webpage += "<input size='8' type='number' required name='stat_speed' min='0' max='10' value="+String(config.stat_speed)+" step='1'>\n";
-  webpage += "</select>\n</td><td>If the actual speed(in m/s) is less then this stat_speed, stat_screens are active</td>\n</tr>\n";
+  webpage += "</select>\n</td><td>Sets the threshold speed (in m/s) to switch from statistic to speed screens. </td>\n</tr>\n";
    //Start_logging_speed
-  webpage += "<tr>\n<td>start_logging_speed</td><td>\n";
+  webpage += "<tr>\n<td>Start logging speed</td><td>\n";
   webpage += "<input size='8' type='number' required name='start_logging_speed' min='0' max='10' value="+String(config.start_logging_speed)+" step='1'>\n";
-  webpage += "</select>\n</td><td>If the actual speed(in m/s) exceed this start_logging_speed, then the log is started</td>\n</tr>\n"; 
+  webpage += "</select>\n</td><td>Sets the threshold speed(in m/s) to start logging.</td>\n</tr>\n"; 
   //GPIO12_screens
   #ifndef TTGO_T_DISPLAY
   webpage += "<tr>\n<td>GPIO12_screens</td><td>\n";
@@ -513,32 +514,32 @@ void html_config(String& webpage){
   webpage += "</select>\n</td><td>Choice for switch_off (first digit 0 or 1) and sleep_screen (second digit 0 or 1): </td>\n</tr>\n";
   #endif
   //logTXT
-  webpage += "<tr><td>logTXT</td><td>\n<select id='logTXT' name='logTXT'>\n";
-  if(config.logTXT == 1) webpage += "<option value='1' selected>LOG TXT ON</option>\n"; else webpage += "<option value='1'>LOG TXT ON</option>\n";
-  if(config.logTXT == 0) webpage += "<option value='0' selected>LOG TXT OFF</option>\n"; else webpage += "<option value='0'>LOG TXT OFF</option>\n";
-  webpage += "</select>\n</td><td>logTXT: Text file with errorlogs and status information. At shutdown, session results are written to this file.</td>\n</tr>\n"; 
+  webpage += "<tr><td>Log TXT</td><td>\n<select id='logTXT' name='logTXT'>\n";
+  if(config.logTXT == 1) webpage += "<option value='1' selected>ON</option>\n"; else webpage += "<option value='1'>ON</option>\n";
+  if(config.logTXT == 0) webpage += "<option value='0' selected>OFF</option>\n"; else webpage += "<option value='0'>OFF</option>\n";
+  webpage += "</select>\n</td><td>Saves a plain text file with errors, status information and session results at shutdown.</td>\n</tr>\n"; 
   //logSBP
-  webpage += "<tr><td>logSBP</td><td>\n<select id='logSBP' name='logSBP'>\n";
-  if(config.logSBP == 1) webpage += "<option value='1' selected>LOG SBP ON</option>\n"; else webpage += "<option value='1'>LOG SBP ON</option>\n";
-  if(config.logSBP == 0) webpage += "<option value='0' selected>LOG SBP OFF</option>\n"; else webpage += "<option value='0'>LOG SBP OFF</option>\n";
-  webpage += "</select>\n</td><td>logSBP: To save the GPS data in sbp format. This is also the file that you can upload to gp3s. The sbp format is ca 70% smaller then ubx.</td>\n</tr>\n";  
+  webpage += "<tr><td>Log SBP</td><td>\n<select id='logSBP' name='logSBP'>\n";
+  if(config.logSBP == 1) webpage += "<option value='1' selected>ON</option>\n"; else webpage += "<option value='1'>ON</option>\n";
+  if(config.logSBP == 0) webpage += "<option value='0' selected>OFF</option>\n"; else webpage += "<option value='0'>OFF</option>\n";
+  webpage += "</select>\n</td><td>Saves a logfile in sbp format including correction data. This is the original locosys navilink file standard, approved for upload to GP3S and use in competitions. Reduces filesize by ~70% vs ubx.</td>\n</tr>\n";  
   //logUBX
-  webpage += "<tr><td>logUBX</td><td>\n<select id='logUBX' name='logUBX'>\n";
-  if(config.logUBX == 1) webpage += "<option value='1' selected>LOG UBX ON</option>\n"; else webpage += "<option value='1'>LOG UBX ON</option>\n";
-  if(config.logUBX == 0) webpage += "<option value='0' selected>LOG UBX OFF</option>\n"; else webpage += "<option value='0'>LOG UBX OFF</option>\n";
-  webpage += "</select>\n</td><td>logUBX: To save the GPS data in ubx format. This is also the file that you can upload to gp3s.</td>\n</tr>\n";  
+  webpage += "<tr><td>Log UBX</td><td>\n<select id='logUBX' name='logUBX'>\n";
+  if(config.logUBX == 1) webpage += "<option value='1' selected>ON</option>\n"; else webpage += "<option value='1'>ON</option>\n";
+  if(config.logUBX == 0) webpage += "<option value='0' selected>OFF</option>\n"; else webpage += "<option value='0'>OFF</option>\n";
+  webpage += "</select>\n</td><td>Saves a logfile in ubx format. This is the u-blox proprietary file format, approved for upload to GP3S.</td>\n</tr>\n";  
   //logGPY  
-  webpage += "<tr><td>logGPY</td><td>\n<select id='logGPY' name='logGPY'>\n";
-  if(config.logGPY == 1) webpage += "<option value='1' selected>LOG GPY ON</option>\n"; else webpage += "<option value='1'>LOG GPY ON</option>\n";
-  if(config.logGPY == 0) webpage += "<option value='0' selected>LOG GPY OFF</option>\n"; else webpage += "<option value='0'>LOG GPY OFF</option>\n";
-  webpage += "</select>\n</td><td>logGPY: To save the GPS data in the new open source format .gpy. </td>\n</tr>\n";  
+  webpage += "<tr><td>Log GPY</td><td>\n<select id='logGPY' name='logGPY'>\n";
+  if(config.logGPY == 1) webpage += "<option value='1' selected>ON</option>\n"; else webpage += "<option value='1'>ON</option>\n";
+  if(config.logGPY == 0) webpage += "<option value='0' selected>OFF</option>\n"; else webpage += "<option value='0'>OFF</option>\n";
+  webpage += "</select>\n</td><td>Saves a logfile in the new open source gpy format, approved for upload to GP3S. </td>\n</tr>\n";  
   //logGPX  
-  webpage += "<tr><td>logGPX</td><td>\n<select id='logGPX' name='logGPX'>\n";
-  if(config.logGPX == 1) webpage += "<option value='1' selected>LOG GPX ON</option>\n"; else webpage += "<option value='1'>LOG GPX ON</option>\n";
-  if(config.logGPX == 0) webpage += "<option value='0' selected>LOG GPX OFF</option>\n"; else webpage += "<option value='0'>LOG GPX OFF</option>\n";
-  webpage += "</select>\n</td><td>logGPX: To save the GPS data in gpx format @ 1Hz, for video overlay or other purposes.</td>\n</tr>\n";  
+  webpage += "<tr><td>Log GPX</td><td>\n<select id='logGPX' name='logGPX'>\n";
+  if(config.logGPX == 1) webpage += "<option value='1' selected>ON</option>\n"; else webpage += "<option value='1'>ON</option>\n";
+  if(config.logGPX == 0) webpage += "<option value='0' selected>OFF</option>\n"; else webpage += "<option value='0'>OFF</option>\n";
+  webpage += "</select>\n</td><td>Saves a logfile in gpx data exchange format at 1Hz. Useful for video overlay or other individual purposes, but NOT approved for GP3S upload or contest use due to consistency issues. </td>\n</tr>\n";  
   //timezone
-  webpage += "<tr>\n<td>timezone</td><td>\n<select id='timezone' name='timezone' type='number'>\n"; 
+  webpage += "<tr>\n<td>Timezone</td><td>\n<select id='timezone' name='timezone' type='number'>\n"; 
   Drop_down_menu(config.timezone,-11.0,"-11 (Pacific/Samoa)",webpage);
   Drop_down_menu(config.timezone,-10.0,"-10 (US/Hawaii)",webpage);
   Drop_down_menu(config.timezone,-9.5,"-9:30 (Pacific/Marquesas)",webpage);
@@ -575,33 +576,33 @@ void html_config(String& webpage){
   Drop_down_menu(config.timezone,12.75,"+12:45 (Pacific/Chatham)",webpage);
   Drop_down_menu(config.timezone,13.0,"+13 (Pacific/Fakaofo)",webpage);
   Drop_down_menu(config.timezone,14.0,"+14 (Pacific/Kiritimati)",webpage);    
-  webpage += "</select>\n</td><td>timezone: The local time difference in hours with UTC (can be fractional / negative ! )<a href='https://en.wikipedia.org/wiki/List_of_UTC_offsets' target='_blank'>this Link</a></td>\n</tr>\n";
+  webpage += "</select>\n</td><td>Sets local time offset from UTC, can be fractional / negative ! <a href='https://en.wikipedia.org/wiki/List_of_UTC_offsets' target='_blank'>this Link</a></td>\n</tr>\n";
   //timezone daylight saving
-  webpage += "<tr><td>timezone_DST</td><td>\n<select id='timezone_DST' name='timezone_DST'>\n";
-  if(config.timezone_DST == 1) webpage += "<option value='1' selected>DAYLIGHT SAVING ON</option>\n"; else webpage += "<option value='1'>DAYLIGHT SAVING ON</option>\n";
-  if(config.timezone_DST == 0) webpage += "<option value='0' selected>DAYLIGHT SAVING OFF</option>\n"; else webpage += "<option value='0'>DAYLIGHT SAVING OFF</option>\n";
-  webpage += "</select>\n</td><td>For automatic switching to summertime / wintertime (daylight saving) </td>\n</tr>\n";  
+  webpage += "<tr><td>Daylight Saving</td><td>\n<select id='timezone_DST' name='timezone_DST'>\n";
+  if(config.timezone_DST == 1) webpage += "<option value='1' selected>ON</option>\n"; else webpage += "<option value='1'>ON</option>\n";
+  if(config.timezone_DST == 0) webpage += "<option value='0' selected>OFF</option>\n"; else webpage += "<option value='0'>OFF</option>\n";
+  webpage += "</select>\n</td><td>Set ON for optional automatic switching to daylight saving time </td>\n</tr>\n";  
   //filenaming  
-  webpage += "<tr><td>file_date_time</td><td>\n<select id='file_date_time' name='file_date_time'>\n";
+  webpage += "<tr><td>Filename sequence</td><td>\n<select id='file_date_time' name='file_date_time'>\n";
   Drop_down_menu(config.file_date_time,0,"name_MAC_index",webpage);
   Drop_down_menu(config.file_date_time,1,"name_date_time",webpage);   
   Drop_down_menu(config.file_date_time,2,"date_time_name",webpage);
   Drop_down_menu(config.file_date_time,3,"name_date_time_MAC",webpage);
-  webpage += "</select>\n</td><td>file_date_time: To choose the type of filenaming between filename_MAC_count or filename_date_time or date_time_filename or name_date_time_MAC.</td>\n</tr>\n"; 
+  webpage += "</select>\n</td><td>Choose the desired order of filename elements. Set to 1 for standard filename sequence: name_date_time.</td>\n</tr>\n"; 
   //UBXfile
-  webpage += "<tr>\n<td>UBXfile</td><td>\n";
+  webpage += "<tr>\n<td>Your name</td><td>\n";
   webpage += "<input size='10' type='text' required name='UBXfile' value="+String(config.UBXfile)+">\n";
-  webpage += "</select>\n</td><td>UBXfile: Here you can set the desired file name (max 10 char!), this is completed with the (unique) MAC address of the ESP32 and a suffix from 000 to 999 or the timestamp when the logging started.</td>\n</tr>\n";
+  webpage += "</select>\n</td><td>Choose an individual name for your logs, maximum is 10 characters! Other filename elements will be added as set in filename sequence.</td>\n</tr>\n";
   //Sleep_info
   String Sleep_info="\"" + String(config.Sleep_info) + "\"";
-  webpage += "<tr>\n<td>Sleep_info</td><td>\n";
+  webpage += "<tr>\n<td>Sleep info</td><td>\n";
   webpage += "<input size='21' type='text' required name='Sleep_info' value="+Sleep_info+">\n";//size 20 -> 21
-  webpage += "</select>\n</td><td>Sleep_info:  Text appears in sleep_screen.</td>\n</tr>\n";
+  webpage += "</select>\n</td><td>Text to display during sleep on e-paper hardware. Maximun 21 characters. </td>\n</tr>\n";
   //reboot the esp
-  webpage += "<tr><td>reboot</td><td>\n<select id='reboot' name='reboot'>\n";
+  webpage += "<tr><td>Save and reboot</td><td>\n<select id='reboot' name='reboot'>\n";
   webpage += "<option value='yes' selected>yes</option>\n";
   webpage += "<option value='no'>no</option>\n";
-  webpage += "</select>\n</td><td>reboot: reboot after upload (new config will only load@boot)</td>\n</tr>\n";  
+  webpage += "</select>\n</td><td>Set to yes for reboot after config changes. Required for new config to take effect.</td>\n</tr>\n";  
 }
 
  const char html_config_footer[] PROGMEM = R"=====(

@@ -39,7 +39,7 @@ const char* ssid = config.ssid; //WiFi SSID
 const char* password = config.password; //WiFi Password
 const char* ssid2 = config.ssid2; //WiFi SSID
 const char* password2 = config.password2; //WiFi Password
-const char* soft_ap_ssid = "ESP32AP"; //accespoint ssid
+const char* soft_ap_ssid = "ESP-GPS"; //accespoint ssid
 const char* soft_ap_password = "password"; //accespoint password
 extern char Timezone[64];
 bool ap_mode=false;
