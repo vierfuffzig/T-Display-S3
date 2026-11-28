@@ -340,7 +340,7 @@ void GPSTC_info(char *GPSTC_post) {
 }
 void Update_bat(void){
     analog_bat = analogRead(PIN_BAT);
-    analog_mean=(analog_bat*0.02+analog_bat*0.98);
+    analog_mean=analog_bat*0.02 + analog_bat*0.98;
     RTC_voltage_bat=analog_mean*RTC_calibration_bat*2/1000;// 1:2 volt div on S3 ADC
 }
 void printLocalTime(){
@@ -366,29 +366,35 @@ void feedTheDog_Task1(){
 
 void OnWiFiEvent(WiFiEvent_t event){
   switch (event) {
-    case SYSTEM_EVENT_STA_CONNECTED:
+    //case SYSTEM_EVENT_STA_CONNECTED:
+    case ARDUINO_EVENT_WIFI_STA_CONNECTED:
       Serial.println("ESP32 Connected to SSID Station mode");
       WiFi.mode(WIFI_MODE_STA);//switch off softAP
       Serial.println("ESP32 Soft AP switched off");
       break;
-    case SYSTEM_EVENT_STA_DISCONNECTED:         //test
+    //case SYSTEM_EVENT_STA_DISCONNECTED:
+    case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
       Serial.println("ESP32 disconnected to WIFI");
       //SoftAP_connection=false;
       break;
-    case SYSTEM_EVENT_STA_GOT_IP:
+    //case SYSTEM_EVENT_STA_GOT_IP:
+    case ARDUINO_EVENT_WIFI_STA_GOT_IP:
       Serial.println("ESP32 Connected to WiFi Network");
       IP_adress =  WiFi.localIP().toString();
       break;
-    case SYSTEM_EVENT_AP_START:
-      WiFi.softAPConfig(local_IP, gateway, subnet);  
+    //case SYSTEM_EVENT_AP_START:
+    case ARDUINO_EVENT_WIFI_AP_START:
+      WiFi.softAPConfig(local_IP, gateway, subnet);
       Serial.println("ESP32 soft AP started");
       break;
-    case SYSTEM_EVENT_AP_STACONNECTED:
+    //case SYSTEM_EVENT_AP_STACONNECTED:
+    case ARDUINO_EVENT_WIFI_AP_STACONNECTED:
       Serial.println("Station connected to ESP32 soft AP");
       IP_adress =  WiFi.softAPIP().toString();
       SoftAP_connection=true;
       break;
-    case SYSTEM_EVENT_AP_STADISCONNECTED:
+    //case SYSTEM_EVENT_AP_STADISCONNECTED:
+    case ARDUINO_EVENT_WIFI_AP_STADISCONNECTED:
       Serial.println("Station disconnected from ESP32 soft AP");
       SoftAP_connection=false;
       break;
@@ -430,12 +436,19 @@ boolean Button_push::Button_pushed(void) {
 void Search_for_wifi(void) {
   while ((WiFi.status() != WL_CONNECTED)&(SoftAP_connection==false)){  
     if(Short_push35.Button_pushed()|Short_push15.Button_pushed()){ap_mode=true;esp_task_wdt_reset();break;}
-    Update_bat();        
+    Update_bat();
+    /*      
     if(ap_mode){Update_screen(WIFI_SOFT_AP);}
     else {Update_screen(WIFI_STATION); }
     Serial.print(".");
     wifi_search--;
     delay(1000);
+    */
+    if(ap_mode==false)Update_screen(WIFI_STATION);
+    else Update_screen(WIFI_SOFT_AP);
+    Serial.print(".");
+    delay(1000);
+    wifi_search--;
     if(wifi_search<=0){
       IP_adress = "0.0.0.0";
       break;
